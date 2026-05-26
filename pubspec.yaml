@@ -1,0 +1,48 @@
+name: my_fitness_chat
+description: "Test assignment for My Fitness chat module."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  flutter_markdown: ^0.7.3
+  
+  intl: ^0.19.0
+  uuid: ^4.3.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  riverpod_generator: ^2.4.0
+  build_runner: ^2.4.9
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/logo.png
+    - assets/images/bg_brand.png
+    - assets/images/brand_line.png
+    - assets/images/brand_line_orange.png
+    - assets/images/fit_element_1.png
+    - assets/images/fit_element_2.png
+    - assets/images/fit_element_1_orange.png
+    - assets/images/fit_element_2_orange.png
+    - assets/images/MF_Line_1.png
+    - assets/images/MF_Line_1_orange.png
+
+  fonts:
+    - family: BrandFont
+      fonts:
+        - asset: assets/fonts/Granate.ttf
+          weight: 300
