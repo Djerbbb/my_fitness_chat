@@ -12,11 +12,7 @@ class DateFormatter {
     } else if (messageDate == yesterday) {
       return 'Вчера';
     } else {
-      final months = [
-        'янв', 'фев', 'мар', 'апр', 'май', 'июн',
-        'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'
-      ];
-      return '${dateTime.day} ${months[dateTime.month - 1]}';
+      return DateFormat('d MMM', 'ru').format(dateTime);
     }
   }
 }

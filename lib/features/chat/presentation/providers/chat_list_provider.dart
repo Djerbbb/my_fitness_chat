@@ -3,6 +3,20 @@ import '../../data/models/chat_model.dart';
 import 'message_provider.dart';
 import 'user_profile_provider.dart';
 
+class RoomUserConfig {
+  final String title;
+  final String avatar;
+  final bool isTrainer;
+  final bool isGroup;
+
+  const RoomUserConfig({
+    required this.title,
+    required this.avatar,
+    this.isTrainer = false,
+    this.isGroup = false,
+  });
+}
+
 class UserActiveChatsNotifier extends Notifier<Map<String, Set<String>>> {
   @override
   Map<String, Set<String>> build() {
@@ -32,30 +46,31 @@ final chatListProvider = Provider<List<ChatModel>>((ref) {
 
   List<ChatModel> list = [];
 
-  final allRoomsConfig = {
+  final Map<String, Map<String, RoomUserConfig>> allRoomsConfig = {
     'chat_me_trainer': {
-      'user_me': {'title': 'Александр (Ваш Тренер)', 'avatar': 'https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png', 'isTrainer': true, 'isGroup': false},
-      'trainer': {'title': 'Иван (Клиент)', 'avatar': 'https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png', 'isTrainer': false, 'isGroup': false},
+      'user_me': const RoomUserConfig(title: 'Александр (Ваш Тренер)', avatar: 'https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png', isTrainer: true),
+      'trainer': const RoomUserConfig(title: 'Иван (Клиент)', avatar: 'https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png'),
     },
     'chat_me_nutritionist': {
-      'user_me': {'title': 'Ольга (Нутрициолог)', 'avatar': 'https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png', 'isTrainer': true, 'isGroup': false},
-      'nutritionist': {'title': 'Иван (Клиент)', 'avatar': 'https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png', 'isTrainer': false, 'isGroup': false},
+      'user_me': const RoomUserConfig(title: 'Ольга (Нутрициолог)', avatar: 'https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png', isTrainer: true),
+      'nutritionist': const RoomUserConfig(title: 'Иван (Клиент)', avatar: 'https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png'),
     },
     'chat_trainer_nutritionist': {
-      'trainer': {'title': 'Ольга (Нутрициолог)', 'avatar': 'https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png', 'isTrainer': true, 'isGroup': false},
-      'nutritionist': {'title': 'Александр (Ваш Тренер)', 'avatar': 'https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png', 'isTrainer': true, 'isGroup': false},
+      'trainer': const RoomUserConfig(title: 'Ольга (Нутрициолог)', avatar: 'https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png', isTrainer: true),
+      'nutritionist': const RoomUserConfig(title: 'Александр (Ваш Тренер)', avatar: 'https://png.klev.club/uploads/posts/2024-04/png-klev-club-v3lo-p-avatarka-png-2.png', isTrainer: true),
     },
     'chat_group_crossfit': {
-      'user_me': {'title': 'Группа Кроссфит «Мой Фитнес»', 'avatar': 'https://cdn-icons-png.flaticon.com/512/69/69589.png', 'isTrainer': false, 'isGroup': true},
-      'trainer': {'title': 'Группа Кроссфит «Мой Фитнес»', 'avatar': 'https://cdn-icons-png.flaticon.com/512/69/69589.png', 'isTrainer': false, 'isGroup': true},
-      'nutritionist': {'title': 'Группа Кроссфит «Мой Фитнес»', 'avatar': 'https://cdn-icons-png.flaticon.com/512/69/69589.png', 'isTrainer': false, 'isGroup': true},
+      'user_me': const RoomUserConfig(title: 'Группа Кроссфит «Мой Фитнес»', avatar: 'https://cdn-icons-png.flaticon.com/512/69/69589.png', isGroup: true),
+      'trainer': const RoomUserConfig(title: 'Группа Кроссфит «Мой Фитнес»', avatar: 'https://cdn-icons-png.flaticon.com/512/69/69589.png', isGroup: true),
+      'nutritionist': const RoomUserConfig(title: 'Группа Кроссфит «Мой Фитнес»', avatar: 'https://cdn-icons-png.flaticon.com/512/69/69589.png', isGroup: true),
     }
   };
 
   for (final roomId in activeRoomIds) {
     final configMap = allRoomsConfig[roomId];
     if (configMap == null) continue;
-    final config = configMap[currentUser.id];
+    
+    final RoomUserConfig? config = configMap[currentUser.id];
     if (config == null) continue;
 
     final roomMessages = ref.watch(chatMessagesProvider(roomId));
@@ -64,10 +79,10 @@ final chatListProvider = Provider<List<ChatModel>>((ref) {
 
     list.add(ChatModel(
       id: roomId,
-      title: config['title'] as String,
-      avatarUrl: config['avatar'] as String,
-      isGroup: config['isGroup'] as bool,
-      isTrainer: config['isTrainer'] as bool,
+      title: config.title,
+      avatarUrl: config.avatar,
+      isGroup: config.isGroup,
+      isTrainer: config.isTrainer,
       lastMessage: lastMsgText,
       lastMessageTime: lastMsgTime,
       unreadCount: 0,
